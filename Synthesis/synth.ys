@@ -1,0 +1,21 @@
+# Read all Verilog source files
+read_verilog src/adder32.v
+read_verilog src/logic_unit32.v
+read_verilog src/shift_unit32.v
+read_verilog src/comparator32.v
+read_verilog src/alu32.v
+
+# Elaborate design hierarchy
+hierarchy -check -top alu32
+
+# High-level synthesis & optimization
+proc; opt; fsm; opt; memory; opt
+
+# Technology mapping to generic gates
+techmap; opt
+
+# Generate area & cell count statistics report
+tee -o reports/synth_report.txt stat
+
+# Write generic gate-level netlist
+write_verilog -noattr synth/alu32_generic.v
